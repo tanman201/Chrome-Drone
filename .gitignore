@@ -1,0 +1,11 @@
+*
+
+!*.c
+!*.h
+!.gitignore
+*.project
+*.ccsproject
+*.cmd
+targetConfigs/
+Debug/
+.settings/
