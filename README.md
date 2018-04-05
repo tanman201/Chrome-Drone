@@ -1,2 +1,2 @@
-# DroneSquad
+# Chrome Drone
 Systems Final Project
