@@ -4,9 +4,23 @@
 #include "task.h"
 #include "uart.h"
 #include "hal_general.h"
+#include "system.h"
 
 void Blink_Setup();
 void Blink();
+void Data_Struct_Init(sensdat_t* sendat);
+void Sensor_Connection_Test(sensdat_t* sensdat);
+
+
+
+
+/* Global struct deceleration */
+sensdat_t sensor_data;
+
+
+
+
+
 
 /**
  * main.c
@@ -40,4 +54,58 @@ void Blink_Setup(){
 
 void Blink(){
     P1OUT ^= BIT0;                      // Toggle LED
+}
+
+
+/*
+ * Function: Data_Struct_Init
+ * --------------------------
+ * Initializes the data structure for the
+ * storage of the sensor data. 
+ *
+ * @param sensdat:  Pointer to the struct
+ *                  which is to be initialized.
+ */
+
+void Data_Struct_Init(sensdat_t* sendat) {
+
+    sensdat = sensdat;
+
+    int i = 0;
+    for(i = 0; i <= sizeof(sensdat->data_buffer); i++) {
+        sensdat->data_buffer[i] = 0x00;
+    }
+
+    sensdat->x_accel   = 0;
+    sensdat->y_accel   = 0;
+    sensdat->z_accel   = 0;
+    sensdat->prox_data = 0;
+
+    return;
+}
+
+
+
+/*
+ * Function: Sensor_Connection_Test
+ * --------------------------------
+ * This is a function which will be able to 
+ * check both of the I2C devices used to make
+ * sure that they are functioning nominally.
+ * (Might want to add a flag.)
+ *
+ * @param sensdat:  Struct used as an argument
+ *                  for the Get_ID functions.
+ */
+
+void Sensor_Connection_Test(sensdat_t* sensdat) {
+    int connected = 0;
+    while(1) {
+        if(VCNL4200_Get_ID(sensdat) == 0x68) {
+            connected++;
+        }
+        if(connected == 1) {
+            break;
+        }
+    }
 }
