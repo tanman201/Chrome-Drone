@@ -8,6 +8,8 @@
 #ifndef LED_DRIVER_H_
 #define LED_DRIVER_H_
 
+#include "system.h"
+
 void LED_Init();
 void LED_On(unsigned int LED);
 void LED_Off(unsigned int LED);

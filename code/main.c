@@ -14,11 +14,9 @@ void Sensor_Connection_Test(sensdat_t* sensdat);
 
 
 
+
 /* Global struct deceleration */
 sensdat_t sensor_data;
-
-
-
 
 
 

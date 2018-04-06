@@ -8,7 +8,7 @@
  */
 
 
-#include "system.h"
+#include "i2c.h"
 
 int     RX_Byte_Ctr;    // Coutner to make sure all of the information is received
 int     TX_Byte_Ctr;    // Counter to make sure all of the information is sent

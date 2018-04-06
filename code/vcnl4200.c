@@ -128,9 +128,9 @@ void VCNL4200_Start_ALS(void) {
 
 void VCNL4200_Init(void) {
 	char data[2] = {0x88, 0x13};
-	i2c_multiple_write(VCNL4200_ADDRESS, VCNL4200_PS_THDL_REG, 2, data);
+	i2c_UCB2_multiple_write(VCNL4200_ADDRESS, VCNL4200_PS_THDL_REG, 2, data);
 	data[0] = 0xE0;
 	data[1] = 0x2E;
-	i2c_multiple_write(VCNL4200_ADDRESS, VCNL4200_PS_THDH_REG, 2, data);
+	i2c_UCB2_multiple_write(VCNL4200_ADDRESS, VCNL4200_PS_THDH_REG, 2, data);
 
 }
