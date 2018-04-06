@@ -1,8 +1,3 @@
-*
-
-!*.c
-!*.h
-!.gitignore
 *.project
 *.ccsproject
 *.cmd
