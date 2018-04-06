@@ -37,6 +37,7 @@
 uint16_t VCNL4200_Get_PS_Data(sensdat_t* sensdat);
 uint16_t VCNL4200_Get_ALS_Data(sensdat_t* sensdat);
 uint16_t VCNL4200_Get_ID(sensdat_t* sensdat);
+void VCNL4200_Set_LED_I(void);
 void VCNL4200_Start_PS(void);
 void VCNL4200_Start_ALS(void);
 void VCNL4200_Init();

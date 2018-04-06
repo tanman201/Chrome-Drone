@@ -23,7 +23,7 @@
 
 void MPU6050_Wake_Up(void) {
     char data[1] = {0};
-    i2c_single_write(MPU6050_ADDRESS_LOW, PWR_MGMT_1, data);
+    i2c_UCB2_single_write(MPU6050_ADDRESS_LOW, PWR_MGMT_1, data);
 }
 
 
@@ -34,17 +34,17 @@ void MPU6050_Wake_Up(void) {
  * Returns the device ID for the MPU6050. Can be used
  * to make sure that the device is properly connected.
  *
- * @param sensdat:	Sensor data structure is used as an
+ * @param sensdat:  Sensor data structure is used as an
  *					argument so the I2c code can use the
  *					data_buffer included in the struct
  *					to store the incoming information.
  * @param return:	Returns a single byte of data which
  *					represents the data address. It should
- *					always read 0x68.
+ *				    always read 0x68.
  */
 
 char MPU6050_Get_ID(sensdat_t* sensdat) {
-	i2c_single_read(MPU6050_ADDRESS_LOW, MPU6050_ID);
+	i2c_UCB2_single_read(MPU6050_ADDRESS_LOW, MPU6050_ID);
 
 	return sensdat->data_buffer[0];
 }
@@ -58,14 +58,14 @@ char MPU6050_Get_ID(sensdat_t* sensdat) {
  * x, y, and z registers of the MPU6050.
  *
  * @param sensdat:	Sensor data structure is used as an
- *					argument so the I2c code can use the
+ *				    argument so the I2c code can use the
  *					data_buffer included in the struc. 
  *					Additionally, separate variables are 
  *					included to store the accel. data. 
  */
 
 void MPU6050_Get_Accel(sensdat_t* sensdat) {
-	i2c_multiple_read(MPU6050_ADDRESS_LOW, ACCEL_DATA, 6);
+	i2c_UCB2_multiple_read(MPU6050_ADDRESS_LOW, ACCEL_DATA, 6);
 	char msb, lsb;
 
 	/* Determining X acceleration */
@@ -113,7 +113,7 @@ void MPU6050_Calibrate_Accel(sensdat_t* sensdat) {
     int z_offset = (16384-z_mean)/8;
 
     while(1) {
-    	int calibrated = 0; 
+    int calibrated = 0; 
 
     	/* Sets the new offsets */
     	Set_X_Accel_Offset(x_offset);
@@ -176,14 +176,13 @@ void MPU6050_Mean_Accel(sensdat_t* sensdat, int* x_mean, int* y_mean, int* z_mea
        y_accel_buffer += sensdat->y_accel;
        z_accel_buffer += sensdat->z_accel;
        i++;
-       __delay_cycles(2);
+       __delay_cycles(2); // Delays so is won't read the same data from MPU6050
    	}
 
    	/* Uses the pointers to set the mean values */
   	*x_mean = x_accel_buffer/CALIB_BUF_SIZE;
    	*y_mean = y_accel_buffer/CALIB_BUF_SIZE;
    	*z_mean = z_accel_buffer/CALIB_BUF_SIZE;
-
 }
 
 
@@ -203,8 +202,7 @@ void Set_X_Accel_Offset(int offset) {
 
 	char offset_data[2] = {MSB, LSB};
 
-	i2c_multiple_write(MPU6050_ADDRESS_LOW, X_OFFSET_ADDRESS, 2, offset_data);
-
+	i2c_UCB2_multiple_write(MPU6050_ADDRESS_LOW, X_OFFSET_ADDRESS, 2, offset_data);
 }
 
 
@@ -215,7 +213,7 @@ void Set_X_Accel_Offset(int offset) {
  * Sets the offset register of the y-axis for the MPU6050.
  *
  * @param offset:	Value in which the y-axis of the MPU6050
- *					will be offset by.
+ *				    will be offset by.
  */
 
 void Set_Y_Accel_Offset(int offset) {
@@ -224,7 +222,7 @@ void Set_Y_Accel_Offset(int offset) {
 
 	char offset_data[2] = {MSB, LSB};
 
-	i2c_multiple_write(MPU6050_ADDRESS_LOW, Y_OFFSET_ADDRESS, 2, offset_data);
+	i2c_UCB2_multiple_write(MPU6050_ADDRESS_LOW, Y_OFFSET_ADDRESS, 2, offset_data);
 }
 
 
@@ -243,8 +241,7 @@ void Set_Z_Accel_Offset(int offset) {
 
 	char offset_data[2] = {MSB, LSB};
 
-	i2c_multiple_write(MPU6050_ADDRESS_LOW, Z_OFFSET_ADDRESS, 2, offset_data);
-	
+	i2c_UCB2_multiple_write(MPU6050_ADDRESS_LOW, Z_OFFSET_ADDRESS, 2, offset_data);
 }
 
 

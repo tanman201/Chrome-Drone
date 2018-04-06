@@ -27,24 +27,36 @@ sensdat_t sensor_data;
  */
 int main(void)
 {
-
     PM5CTL0 &= ~LOCKLPM5;
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
 
     DisableInterrupts();
-
-    Task_Init();
- //   UART_Init(SUBSYSTEM_UART);
-
-    Blink_Setup();
-
     EnableInterrupts();
 
-    Task_Schedule(Blink, 0, 0, 1000);
+    i2c_init();
+        Data_Struct_Init(&sensor_data);
 
-    while(1) {
-        SystemTick();
-    }
+        VCNL4200_Start_PS();
+
+while(1) {
+
+    __delay_cycles(30000);
+
+    VCNL4200_Set_LED_I();
+    VCNL4200_Get_PS_Data(&sensor_data);
+}
+//    Task_Init();
+// //   UART_Init(SUBSYSTEM_UART);
+//
+//    Blink_Setup();
+//
+
+//
+//    Task_Schedule(Blink, 0, 0, 1000);
+//
+//    while(1) {
+//        SystemTick();
+//    }
 }
 
 void Blink_Setup(){
@@ -101,10 +113,13 @@ void Data_Struct_Init(sensdat_t* sendat) {
 void Sensor_Connection_Test(sensdat_t* sensdat) {
     int connected = 0;
     while(1) {
-        if(VCNL4200_Get_ID(sensdat) == 0x68) {
+        if(VCNL4200_Get_ID(sensdat) == 0x5810) {
             connected++;
         }
-        if(connected == 1) {
+        if(MPU6050_Get_ID(sensdat) == 0x68) {
+            connected++;
+        }
+        if(connected == 2) {
             break;
         }
     }
