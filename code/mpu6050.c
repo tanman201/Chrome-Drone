@@ -196,7 +196,7 @@ void MPU6050_Mean_Accel(sensdat_t* sensdat, int* x_mean, int* y_mean, int* z_mea
  *					will be offset by.
  */
 
-void Set_X_Accel_Offset(int offset) {
+void MPU6050_Set_X_Accel_Offset(int offset) {
 	int MSB = offset >> 8;
 	int LSB = offset & 0xFF;
 
@@ -216,7 +216,7 @@ void Set_X_Accel_Offset(int offset) {
  *				    will be offset by.
  */
 
-void Set_Y_Accel_Offset(int offset) {
+void MPU6050_Set_Y_Accel_Offset(int offset) {
 	int MSB = offset >> 8;
 	int LSB = offset & 0xFF;
 
@@ -235,7 +235,7 @@ void Set_Y_Accel_Offset(int offset) {
  * @param offset:	Value in which the z-axis of the MPU6050
  *					will be offset by.
  */
-void Set_Z_Accel_Offset(int offset) {
+void MPU6050_Set_Z_Accel_Offset(int offset) {
 	int MSB = offset >> 8;
 	int LSB = offset & 0xFF;
 

@@ -39,6 +39,7 @@ extern sensdat_t sensor_data;
 #include "mpu6050.h"
 #include "vcnl4200.h"
 #include "led_driver.h"
+#include "debug.h"
 
 
 #endif /* SYSTEM_H_ */

@@ -36,9 +36,9 @@ void MPU6050_Init(sensdat_t* sensdat);
 void MPU6050_Get_Accel(sensdat_t* sensdat);
 void MPU6050_Calibrate_Accel(sensdat_t* sensdat);
 void MPU6050_Mean_Accel(sensdat_t* sensdat, int* x_offset, int* y_offset, int* z_offset);
-void Set_X_Accel_Offset(int offset);
-void Set_Y_Accel_Offset(int offset);
-void Set_Z_Accel_Offset(int offset);
+void MPU6050_Set_X_Accel_Offset(int offset);
+void MPU6050_Set_Y_Accel_Offset(int offset);
+void MPU6050_Set_Z_Accel_Offset(int offset);
 void MPU6050_Wake_Up(void);
 char MPU6050_Get_ID(sensdat_t* sensdat);
 
