@@ -15,6 +15,12 @@
 #include <stdint.h>
 #include <msp430.h>
 
+#define UART_BAUD 9600
+#define USE_UART1
+#define USE_UART2
+#define UART_CHANNEL_DEBUG UART2_CH
+#define UART2_CH 2
+
 /* Structure definition for storing sensor data */
 typedef struct {
     char data_buffer[6];
@@ -35,11 +41,14 @@ extern sensdat_t sensor_data;
  * the global decleration. 
  */
 
+#include "uart.h"
 #include "i2c.h"
 #include "mpu6050.h"
 #include "vcnl4200.h"
 #include "led_driver.h"
 #include "debug.h"
+#include "pwm.h"
+
 
 
 #endif /* SYSTEM_H_ */

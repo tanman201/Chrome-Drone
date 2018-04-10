@@ -2,7 +2,7 @@
  *            debug.c
  *
  *   Created on:  April 6, 2018
- *  Last Edited:  April 6, 2018
+ *  Last Edited:  April 9, 2018
  *       Author:  Nick Gorab
  *        
  *  This serves as a debug terminal for the 
@@ -23,6 +23,9 @@ void debugMenuHandle(char c) {
         case '3':
         	LED_Tests();
             break;
+        case '4':
+        	Motor_Test();
+        	break;
         default:
             UART_RegisterReceiver(UART_CHANNEL_DEBUG, debugMenuHandle);
             break;
@@ -37,7 +40,8 @@ void Debug_Options() {
 			"Select:\n\r"
 			"1: Accelerometer Testing\n\r"
 			"2: Proximity Sensor Testing\n\r"
-			"3: LED Testing\n\r";
+			"3: LED Testing\n\r"
+			"4: Motor Testing\n\r";
 
 	UART_Printf(UART_CHANNEL_DEBUG, menu);
 }
@@ -95,7 +99,7 @@ void proxMenuHandle(char c) {
 			VCNL4200_Set_LED_I();
 			break;
 		case '0':
-			UART_UnregisterReceiver(UART_CHANNEL_DEBUG, powerMenuHandle);
+			UART_UnregisterReceiver(UART_CHANNEL_DEBUG, debugMenuHandle);
 			Debug_Options();
 			break;
 	}
@@ -113,4 +117,12 @@ void Prox_Tests() {
 			"0: Return\n\r";
 
 	UART_Printf(UART_CHANNEL_DEBUG, proxMenu);
+}
+
+void motorMenuHandle(char c) {
+	UART_Printf(UART_CHANNEL_DEBUG, "%c", c);
+	switch(c) {
+		case '1':
+
+	}
 }
