@@ -18,14 +18,14 @@ void i2c_init(void);
 
 /* UCB2 Functions */
 void i2c_UCB2_single_write(char slave_address, char memory_address, char *tx_data);
-void i2c_UCB2_single_read(int slave_address, char memory_address);
+void i2c_UCB2_single_read(int slave_address, char memory_address, char *rx_data);
 void i2c_UCB2_multiple_write(char slave_address, char memory_address, int size, char *tx_data);
-void i2c_UCB2_multiple_read(int slave_address, char memory_address, int size);
+void i2c_UCB2_multiple_read(int slave_address, char memory_address, int size, char *rx_data);
 
 /* UCB1 Functions */
 void i2c_UCB1_single_write(char slave_address, char memory_address, char *tx_data);
-void i2c_UCB1_single_read(int slave_address, char memory_address);
+void i2c_UCB1_single_read(int slave_address, char memory_address, char *rx_data);
 void i2c_UCB1_multiple_write(char slave_address, char memory_address, int size, char *tx_data);
-void i2c_UCB1_multiple_read(int slave_address, char memory_address, int size);
+void i2c_UCB1_multiple_read(int slave_address, char memory_address, int size, char *rx_data);
 
 #endif /* I2C_H_ */

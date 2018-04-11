@@ -24,11 +24,12 @@
  *					16-bit integer value.
  */
 
-uint16_t VCNL4200_Get_PS_Data(sensdat_t* sensdat) {
-	i2c_UCB2_multiple_read(VCNL4200_ADDRESS, VCNL4200_PROXIMITY_REG, 2);
-	sensdat->prox_data = ((sensdat->data_buffer[0] << 8) | sensdat->data_buffer[1]);
+uint16_t VCNL4200_Get_PS_Data(void) {
+    char prox_buffer[2] = {0};
+	i2c_UCB2_multiple_read(VCNL4200_ADDRESS, VCNL4200_PROXIMITY_REG, 2, prox_buffer);
+	int prox_data = (prox_buffer[0] << 8 | prox_buffer[1]);
 
-	return sensdat->prox_data;
+	return prox_data;
 }
 
 
@@ -46,11 +47,13 @@ uint16_t VCNL4200_Get_PS_Data(sensdat_t* sensdat) {
  *					may need to be reworked in future code.
  */
 
-uint16_t VCNL4200_Get_ALS_Data(sensdat_t* sensdat) {
-    i2c_UCB2_multiple_read(VCNL4200_ADDRESS, VCNL4200_AMBIENT_REG, 2);
-    sensdat->prox_data = ((sensdat->data_buffer[0] << 8) | sensdat->data_buffer[1]);
+uint16_t VCNL4200_Get_ALS_Data(void) {
+    char als_buffer[2] = {0};
 
-    return sensdat->prox_data;
+    i2c_UCB2_multiple_read(VCNL4200_ADDRESS, VCNL4200_AMBIENT_REG, 2, als_buffer);
+    int als_data = (als_buffer[0] << 8 | als_buffer[1]);
+
+    return als_data;
 }
 
 /*
@@ -63,9 +66,9 @@ uint16_t VCNL4200_Get_ALS_Data(sensdat_t* sensdat) {
 
 void VCNL4200_Read_CONF_REG(void) {
     char i = 0;
-
+    char data_buff[2] = {0};
     while(i < 0x0F) {
-    i2c_UCB2_multiple_read(VCNL4200_ADDRESS, i, 2);
+    i2c_UCB2_multiple_read(VCNL4200_ADDRESS, i, 2, data_buff);
     i++;
     }
 }
@@ -85,9 +88,10 @@ void VCNL4200_Read_CONF_REG(void) {
  *					unsigned 16-bit register.
  */
 
-uint16_t VCNL4200_Get_ID(sensdat_t* sensdat) {
-	i2c_UCB2_multiple_read(VCNL4200_ADDRESS, VCNL4200_DeviceID_REG, 2);
-	uint16_t vcnl4200_id = ((sensdat->data_buffer[0] << 8) | sensdat->data_buffer[1]);
+uint16_t VCNL4200_Get_ID(void) {
+    char id_buffer[2] = {0};
+	i2c_UCB2_multiple_read(VCNL4200_ADDRESS, VCNL4200_DeviceID_REG, 2, id_buffer);
+	uint16_t vcnl4200_id = (id_buffer[0] << 8 | id_buffer[1]);
 
 	return vcnl4200_id;
 }

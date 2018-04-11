@@ -49,18 +49,19 @@ void Debug_Options() {
 
 void accelMenuHandle(char c) {
 	UART_Printf(UART_CHANNEL_DEBUG, "%c", c);
+	int x, y, z;
 	switch(c) {
 		case '1':
 			MPU6050_Wake_Up();
 			break;
 		case '2':
-			MPU6050_Get_ID(&sensor_data);
+			MPU6050_Get_ID();
 			break;
 		case '3':
-			MPU6050_Get_Accel(&sensor_data);
+			MPU6050_Get_Accel(&x, &y, &z);
 			break;
 		case '4':
-			MPU6050_Calibrate_Accel(&sensor_data);
+			MPU6050_Calibrate_Accel();
 			break;
 		case '0':
 			UART_UnregisterReceiver(UART_CHANNEL_DEBUG, accelMenuHandle);
@@ -93,7 +94,7 @@ void proxMenuHandle(char c) {
 			VCNL4200_Start_ALS();
 			break;
 		case '3':
-			VCNL4200_Get_ID(&sensor_data);
+			VCNL4200_Get_ID();
 			break;
 		case '4':
 			VCNL4200_Set_LED_I();

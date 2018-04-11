@@ -32,15 +32,14 @@
 #define Z_OFFSET_ADDRESS 	0X0A
 
 /* Functions */
-void MPU6050_Init(sensdat_t* sensdat);
-void MPU6050_Get_Accel(sensdat_t* sensdat);
-void MPU6050_Calibrate_Accel(sensdat_t* sensdat);
-void MPU6050_Mean_Accel(sensdat_t* sensdat, int* x_offset, int* y_offset, int* z_offset);
+void MPU6050_Get_Accel(int *x_accel, int *y_accel, int *z_accel);
+void MPU6050_Calibrate_Accel(void);
+void MPU6050_Mean_Accel(int* x_offset, int* y_offset, int* z_offset);
 void MPU6050_Set_X_Accel_Offset(int offset);
 void MPU6050_Set_Y_Accel_Offset(int offset);
 void MPU6050_Set_Z_Accel_Offset(int offset);
 void MPU6050_Wake_Up(void);
-char MPU6050_Get_ID(sensdat_t* sensdat);
+char MPU6050_Get_ID(void);
 
 
 

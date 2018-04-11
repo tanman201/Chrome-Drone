@@ -8,13 +8,10 @@
 
 void Blink_Setup();
 void Blink();
-void Data_Struct_Init(sensdat_t* sendat);
-void Sensor_Connection_Test(sensdat_t* sensdat);
+void Sensor_Connection_Test(void);
 
 
 
-/* Global struct deceleration */
-sensdat_t sensor_data;
 
 
 /**
@@ -29,7 +26,6 @@ int main(void)
     EnableInterrupts();
 
     i2c_init();
-        Data_Struct_Init(&sensor_data);
 
         VCNL4200_Start_PS();
 
@@ -38,7 +34,7 @@ while(1) {
     __delay_cycles(30000);
 
     VCNL4200_Set_LED_I();
-    VCNL4200_Get_PS_Data(&sensor_data);
+    VCNL4200_Get_PS_Data();
 }
 //    Task_Init();
 // //   UART_Init(SUBSYSTEM_UART);
@@ -64,33 +60,6 @@ void Blink(){
 }
 
 
-/*
- * Function: Data_Struct_Init
- * --------------------------
- * Initializes the data structure for the
- * storage of the sensor data. 
- *
- * @param sensdat:  Pointer to the struct
- *                  which is to be initialized.
- */
-
-void Data_Struct_Init(sensdat_t* sendat) {
-
-    sensdat = sensdat;
-
-    int i = 0;
-    for(i = 0; i <= sizeof(sensdat->data_buffer); i++) {
-        sensdat->data_buffer[i] = 0x00;
-    }
-
-    sensdat->x_accel   = 0;
-    sensdat->y_accel   = 0;
-    sensdat->z_accel   = 0;
-    sensdat->prox_data = 0;
-
-    return;
-}
-
 
 
 /*
@@ -105,13 +74,13 @@ void Data_Struct_Init(sensdat_t* sendat) {
  *                  for the Get_ID functions.
  */
 
-void Sensor_Connection_Test(sensdat_t* sensdat) {
+void Sensor_Connection_Test(void) {
     int connected = 0;
     while(1) {
-        if(VCNL4200_Get_ID(sensdat) == 0x5810) {
+        if(VCNL4200_Get_ID() == 0x5810) {
             connected++;
         }
-        if(MPU6050_Get_ID(sensdat) == 0x68) {
+        if(MPU6050_Get_ID() == 0x68) {
             connected++;
         }
         if(connected == 2) {

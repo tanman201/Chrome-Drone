@@ -14,8 +14,8 @@ int     RX_Byte_Ctr;    // Coutner to make sure all of the information is receiv
 int     TX_Byte_Ctr;    // Counter to make sure all of the information is sent
 int i  = 0;             // Counting variable for the I2C interrupt
 int v  = 0;             // Counting variable for the I2c interrupt
-char    tx_data[6],     // Creates an array to store memory data
-        dataBuff[6];    // Data buffer which stores data to be sent
+char    tx_buffer[6],     // Creates an array to store memory data
+        rx_buffer[6];    // Data buffer which stores data to be sent
 
 
 /*
@@ -66,19 +66,19 @@ void i2c_init(void) {
  *                        the data being sent.
  */
 
-void i2c_UCB2_single_write(char slave_address, char memory_address, char * data) {
+void i2c_UCB2_single_write(char slave_address, char memory_address, char *tx_data) {
     UCB2I2CSA = slave_address;          // Sets slave address
     TX_Byte_Ctr = 2;                    // Sets the amount of bytes to be sent
     UCB2TBCNT  = 0x02;                  // Expecting to receive 2 bytes of data
 
 
     /* Loads the data into the tx_data buffer */
-    tx_data[0] = memory_address;
+    tx_buffer[0] = memory_address;
 
     /* Iterates through the pointed array */
     unsigned int j = 0;
     for(j = 0; j < 1; j++) {
-        tx_data[j + 1] = data[j];     // Offset by 2 to avoid address overwrite
+        tx_buffer[j + 1] = tx_data[j];     // Offset by 2 to avoid address overwrite
     }
 
 
@@ -103,19 +103,19 @@ void i2c_UCB2_single_write(char slave_address, char memory_address, char * data)
  *                        the data being sent.
  */
 
-void i2c_UCB2_multiple_write(char slave_address, char memory_address, int size, char *data) {
+void i2c_UCB2_multiple_write(char slave_address, char memory_address, int size, char *tx_data) {
     UCB2I2CSA = slave_address;          // Sets slave address
     TX_Byte_Ctr = 1 + size;             // Sets the amount of bytes to be sent
     UCB2TBCNT  = 1 + size;                  // Expecting to receive 2 bytes of data
 
 
     /* Loads the data into the tx_data buffer */
-    tx_data[0] = memory_address;
+    tx_buffer[0] = memory_address;
 
     /* Iterates through the pointed array */
     unsigned int j = 0;
     for(j = 0; j < size; j++) {
-        tx_data[j + 1] = data[j];     // Offset by 2 to avoid address overwrite
+        tx_buffer[j + 1] = tx_data[j];     // Offset by 2 to avoid address overwrite
     }
 
 
@@ -137,12 +137,12 @@ void i2c_UCB2_multiple_write(char slave_address, char memory_address, int size, 
  *                        written to.
  */
 
-void i2c_UCB2_single_read(int slave_address, char memory_address) {
+void i2c_UCB2_single_read(int slave_address, char memory_address, char *rx_data) {
     UCB2I2CSA = slave_address;              // Sets slave address
     RX_Byte_Ctr = 1;                        // Sets the amount of bytes to be received
     TX_Byte_Ctr = 1;                        // Sets the amount of bytes to be sent
     i = 0;                                  // Counting variable set to zero
-    tx_data[0] = memory_address;            // Loads LSB into sending buffer
+    tx_buffer[0] = memory_address;            // Loads LSB into sending buffer
 
     UCB2CTL1 |= UCTR                        // Enables TX Mode
              |  UCTXSTT;                    // Sends start condition
@@ -170,13 +170,13 @@ void i2c_UCB2_single_read(int slave_address, char memory_address) {
  *                        to read from the slave.
  */
 
-void i2c_UCB2_multiple_read(int slave_address, char memory_address, int size) {
+void i2c_UCB2_multiple_read(int slave_address, char memory_address, int size, char *rx_data) {
     UCB2I2CSA = slave_address;              // Sets slave address
     UCB2TBCNT  = 4;                         // Set to 4 to avoid stop condition
     RX_Byte_Ctr = size;                     // Sets the amount of bytes to be received
     TX_Byte_Ctr = 1;                        // Sets the amount of bytes to be sent
     i = 0;                                  // Counting variable set to zero
-    tx_data[0] = memory_address;            // Loads LSB into sending buffer
+    tx_buffer[0] = memory_address;            // Loads LSB into sending buffer
 
     UCB2CTL1 |= UCTR                        // Enables TX Mode
              |  UCTXSTT;                    // Sends start condition
@@ -205,19 +205,19 @@ void i2c_UCB2_multiple_read(int slave_address, char memory_address, int size) {
  *                        the byte which is to be sent over I2C.
  */
 
-void i2c_UCB1_single_write(char slave_address, char memory_address, char * data) {
+void i2c_UCB1_single_write(char slave_address, char memory_address, char *tx_data) {
     UCB1I2CSA = slave_address;          // Sets slave address
     TX_Byte_Ctr = 2;                    // Sets the amount of bytes to be sent
     UCB1TBCNT  = 0x02;                  // Expecting to receive 2 bytes of data
 
 
     /* Loads the data into the tx_data buffer */
-    tx_data[0] = memory_address;
+    tx_buffer[0] = memory_address;
 
     /* Iterates through the pointed array */
     unsigned int j = 0;
     for(j = 0; j < 1; j++) {
-        tx_data[j + 1] = data[j];     // Offset by 2 to avoid address overwrite
+        tx_buffer[j + 1] = tx_data[j];     // Offset by 2 to avoid address overwrite
     }
 
 
@@ -242,19 +242,19 @@ void i2c_UCB1_single_write(char slave_address, char memory_address, char * data)
  *                        the data being sent.
  */
 
-void i2c_UCB1_multiple_write(char slave_address, char memory_address, int size, char *data) {
+void i2c_UCB1_multiple_write(char slave_address, char memory_address, int size, char *tx_data) {
     UCB1I2CSA = slave_address;          // Sets slave address
     TX_Byte_Ctr = 1 + size;             // Sets the amount of bytes to be sent
     UCB1TBCNT  = 1 + size;                  // Expecting to receive 2 bytes of data
 
 
     /* Loads the data into the tx_data buffer */
-    tx_data[0] = memory_address;
+    tx_buffer[0] = memory_address;
 
     /* Iterates through the pointed array */
     unsigned int j = 0;
     for(j = 0; j < size; j++) {
-        tx_data[j + 1] = data[j];     // Offset by 2 to avoid address overwrite
+        tx_buffer[j + 1] = tx_data[j];     // Offset by 2 to avoid address overwrite
     }
 
 
@@ -278,12 +278,12 @@ void i2c_UCB1_multiple_write(char slave_address, char memory_address, int size, 
  */
 
 
-void i2c_UCB1_single_read(int slave_address, char memory_address) {
+void i2c_UCB1_single_read(int slave_address, char memory_address, char *rx_data) {
     UCB1I2CSA = slave_address;              // Sets slave address
     RX_Byte_Ctr = 1;                        // Sets the amount of bytes to be received
     TX_Byte_Ctr = 1;                        // Sets the amount of bytes to be sent
     i = 0;                                  // Counting variable set to zero
-    tx_data[0] = memory_address;            // Loads LSB into sending buffer
+    tx_buffer[0] = memory_address;            // Loads LSB into sending buffer
 
     UCB1CTL1 |= UCTR                        // Enables TX Mode
              |  UCTXSTT;                    // Sends start condition
@@ -312,13 +312,13 @@ void i2c_UCB1_single_read(int slave_address, char memory_address) {
  *                        to read from the slave.
  */
 
-void i2c_UCB1_multiple_read(int slave_address, char memory_address, int size) {
+void i2c_UCB1_multiple_read(int slave_address, char memory_address, int size, char *rx_data) {
     UCB1I2CSA = slave_address;              // Sets slave address
     UCB1TBCNT  = 4;                         // Set to 4 to avoid stop condition
     RX_Byte_Ctr = size;                     // Sets the amount of bytes to be received
     TX_Byte_Ctr = 1;                        // Sets the amount of bytes to be sent
     i = 0;                                  // Counting variable set to zero
-    tx_data[0] = memory_address;            // Loads LSB into sending buffer
+    tx_buffer[0] = memory_address;            // Loads LSB into sending buffer
 
     UCB1CTL1 |= UCTR                        // Enables TX Mode
              |  UCTXSTT;                    // Sends start condition
@@ -341,11 +341,11 @@ __interrupt void USCI_B2_ISR(void) {
 
         case USCI_I2C_UCRXIFG0:                             // I2C RX Interrupt
             if(RX_Byte_Ctr > 1){                            // Checks if there is more data to be received
-                (&sensor_data)->data_buffer[v] = UCB2RXBUF; // Loads the data array
+                rx_buffer[v] = UCB2RXBUF; // Loads the data array
                 v++;                                        // Increments the pointer
                 RX_Byte_Ctr--;                              // Decrement TX byte counter
             } else if (RX_Byte_Ctr == 1){
-                (&sensor_data)->data_buffer[v] = UCB2RXBUF; // Loads the data array
+                rx_buffer[v] = UCB2RXBUF; // Loads the data array
                 v++;                                        // Increments the pointer
                 RX_Byte_Ctr--;
                 v=0;
@@ -355,11 +355,11 @@ __interrupt void USCI_B2_ISR(void) {
 
         case USCI_I2C_UCTXIFG0:                       // I2C TX Interrupt
             if(TX_Byte_Ctr > 1){
-                UCB2TXBUF = tx_data[i];               // Example send
+                UCB2TXBUF = tx_buffer[i];               // Example send
                 i++;
                 TX_Byte_Ctr--;
             } else if (TX_Byte_Ctr == 1){
-                UCB2TXBUF = tx_data[i];               // Example send
+                UCB2TXBUF = tx_buffer[i];               // Example send
                 TX_Byte_Ctr--;
                 i = 0;
                 __bic_SR_register_on_exit(LPM0_bits); // Exit LPM0
@@ -375,11 +375,11 @@ __interrupt void USCI_B1_ISR(void) {
 
         case USCI_I2C_UCRXIFG0:                             // I2C RX Interrupt
             if(RX_Byte_Ctr > 1){                            // Checks if there is more data to be received
-                (&sensor_data)->data_buffer[v] = UCB1RXBUF;   // Loads the data array
+                rx_buffer[v] = UCB1RXBUF;   // Loads the data array
                 v++;                                        // Increments the pointer
                 RX_Byte_Ctr--;                              // Decrement TX byte counter
             } else if (RX_Byte_Ctr == 1){
-                (&sensor_data)->data_buffer[v] = UCB1RXBUF;   // Loads the data array
+                rx_buffer[v] = UCB1RXBUF;   // Loads the data array
                 v++;                                        // Increments the pointer
                 RX_Byte_Ctr--;
                 v=0;
@@ -389,11 +389,11 @@ __interrupt void USCI_B1_ISR(void) {
 
         case USCI_I2C_UCTXIFG0:                         // I2C TX Interrupt
             if(TX_Byte_Ctr > 1){
-                UCB1TXBUF = tx_data[i];                // Example send
+                UCB1TXBUF = tx_buffer[i];                // Example send
                 i++;
                 TX_Byte_Ctr--;
             } else if (TX_Byte_Ctr == 1){
-                UCB1TXBUF = tx_data[i];                // Example send
+                UCB1TXBUF = tx_buffer[i];                // Example send
                 TX_Byte_Ctr--;
                 i = 0;
                 __bic_SR_register_on_exit(LPM0_bits); // Exit LPM0

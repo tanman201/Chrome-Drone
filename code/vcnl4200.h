@@ -34,9 +34,9 @@
 #define VCNL4200_DeviceID_REG 0x0E			// Should always read 0x5810
 
 
-uint16_t VCNL4200_Get_PS_Data(sensdat_t* sensdat);
-uint16_t VCNL4200_Get_ALS_Data(sensdat_t* sensdat);
-uint16_t VCNL4200_Get_ID(sensdat_t* sensdat);
+uint16_t VCNL4200_Get_PS_Data(void);
+uint16_t VCNL4200_Get_ALS_Data(void);
+uint16_t VCNL4200_Get_ID(void);
 void VCNL4200_Set_LED_I(void);
 void VCNL4200_Start_PS(void);
 void VCNL4200_Start_ALS(void);
