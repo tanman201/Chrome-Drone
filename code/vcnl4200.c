@@ -2,7 +2,7 @@
  * 			vcnl4200.c
  *
  *   Created on:  March 26, 2018
- *  Last Edited:  March 28, 2018
+ *  Last Edited:  April 20, 2018
  *       Author:  Nick Gorab
  *        Board:  MSP403FR5994
  * 
@@ -25,8 +25,11 @@
  */
 
 uint16_t VCNL4200_Get_PS_Data(void) {
+
+    VCNL4200_Set_LED_I();
+
     char prox_buffer[2] = {0};
-	i2c_UCB2_multiple_read(VCNL4200_ADDRESS, VCNL4200_PROXIMITY_REG, 2, prox_buffer);
+	i2c_UCB0_multiple_read(VCNL4200_ADDRESS, VCNL4200_PROXIMITY_REG, 2, prox_buffer);
 	int prox_data = (prox_buffer[0] << 8 | prox_buffer[1]);
 
 	return prox_data;
@@ -50,7 +53,7 @@ uint16_t VCNL4200_Get_PS_Data(void) {
 uint16_t VCNL4200_Get_ALS_Data(void) {
     char als_buffer[2] = {0};
 
-    i2c_UCB2_multiple_read(VCNL4200_ADDRESS, VCNL4200_AMBIENT_REG, 2, als_buffer);
+    i2c_UCB0_multiple_read(VCNL4200_ADDRESS, VCNL4200_AMBIENT_REG, 2, als_buffer);
     int als_data = (als_buffer[0] << 8 | als_buffer[1]);
 
     return als_data;
@@ -68,7 +71,7 @@ void VCNL4200_Read_CONF_REG(void) {
     char i = 0;
     char data_buff[2] = {0};
     while(i < 0x0F) {
-    i2c_UCB2_multiple_read(VCNL4200_ADDRESS, i, 2, data_buff);
+    i2c_UCB0_multiple_read(VCNL4200_ADDRESS, i, 2, data_buff);
     i++;
     }
 }
@@ -90,7 +93,7 @@ void VCNL4200_Read_CONF_REG(void) {
 
 uint16_t VCNL4200_Get_ID(void) {
     char id_buffer[2] = {0};
-	i2c_UCB2_multiple_read(VCNL4200_ADDRESS, VCNL4200_DeviceID_REG, 2, id_buffer);
+	i2c_UCB0_multiple_read(VCNL4200_ADDRESS, VCNL4200_DeviceID_REG, 2, id_buffer);
 	uint16_t vcnl4200_id = (id_buffer[0] << 8 | id_buffer[1]);
 
 	return vcnl4200_id;
@@ -108,33 +111,35 @@ uint16_t VCNL4200_Get_ID(void) {
 
 void VCNL4200_Start_PS(void) {
     char data[2] = {0x0A, 0x08};
-    i2c_UCB2_multiple_write(VCNL4200_ADDRESS, VCNL4200_PS_CONF1_CONF2_REG, 2, data);
+    i2c_UCB0_multiple_write(VCNL4200_ADDRESS, VCNL4200_PS_CONF1_CONF2_REG, 2, data);
 }
+
+
 
 
 void VCNL4200_Set_LED_I(void) {
     char data[2] = {0x0C, 0x07};
-    i2c_UCB2_multiple_write(VCNL4200_ADDRESS, VCNL4200_PS_CONF3_MS_REG, 2, data);
+    i2c_UCB0_multiple_write(VCNL4200_ADDRESS, VCNL4200_PS_CONF3_MS_REG, 2, data);
 }
 
 /* Auxiliary functions */
 
 void VCNL4200_Start_CONF3_MS(void){	
     char data[2] = {0x00, 0x20};
-    i2c_UCB2_multiple_write(VCNL4200_ADDRESS, VCNL4200_PS_CONF3_MS_REG, 2, data);
+    i2c_UCB0_multiple_write(VCNL4200_ADDRESS, VCNL4200_PS_CONF3_MS_REG, 2, data);
 }
 
 
 void VCNL4200_Start_ALS(void) {
     char data[1] = {0};
-    i2c_UCB2_single_write(VCNL4200_ADDRESS, VCNL4200_ALS_CONF_REG, data);
+    i2c_UCB0_single_write(VCNL4200_ADDRESS, VCNL4200_ALS_CONF_REG, data);
 }
 
 void VCNL4200_Init(void) {
 	char data[2] = {0x88, 0x13};
-	i2c_UCB2_multiple_write(VCNL4200_ADDRESS, VCNL4200_PS_THDL_REG, 2, data);
+	i2c_UCB0_multiple_write(VCNL4200_ADDRESS, VCNL4200_PS_THDL_REG, 2, data);
 	data[0] = 0xE0;
 	data[1] = 0x2E;
-	i2c_UCB2_multiple_write(VCNL4200_ADDRESS, VCNL4200_PS_THDH_REG, 2, data);
+	i2c_UCB0_multiple_write(VCNL4200_ADDRESS, VCNL4200_PS_THDH_REG, 2, data);
 
 }

@@ -10,8 +10,12 @@ void Blink_Setup();
 void Blink();
 void Sensor_Connection_Test(void);
 
-
-
+/* Global variable declerations */
+int target_height = 0;
+int Kp = 0;
+int Ki = 0;
+int Kd = 0;
+int past_error = 0;
 
 
 /**
@@ -26,15 +30,18 @@ int main(void)
     EnableInterrupts();
 
     i2c_init();
+    LED_Init();
 
         VCNL4200_Start_PS();
 
 while(1) {
 
-    __delay_cycles(30000);
-
-    VCNL4200_Set_LED_I();
+    __delay_cycles(60000);
     VCNL4200_Get_PS_Data();
+    LED_Toggle(1);
+    LED_Toggle(2);
+    LED_Toggle(3);
+    LED_Toggle(4);
 }
 //    Task_Init();
 // //   UART_Init(SUBSYSTEM_UART);

@@ -8,15 +8,18 @@
  *  Driver for the PID controller and motor-PWM distribution
  */
 
-#ifndef CONTROL_H_
-#define CONTROL_H_
+#ifndef PID_H_
+#define PID_H_
 
 #include "system.h"
 
+#define DELTA_T		100
+#define MAX_OUTPUT	100
+#define MIN_OUTPUT	  4
 
-void Control_Set_Height_Ki(char value);
-void Control_Set_Height_Kp(char value);
-void Control_Set_Height_Kd(char value);
-void Control_Update_Height_PID(int set_height);
+void PID_Set_Ki(char value);
+void PID_Set_Kp(char value);
+void PID_Set_Kd(char value);
+void PID_Update(void);
 
 #endif /* SYSTEM_H_ */
