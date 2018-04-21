@@ -16,7 +16,8 @@ int Kp = 0;
 int Ki = 0;
 int Kd = 0;
 int past_error = 0;
-
+uint16_t data = 0;
+int pwm = 0;
 
 /**
  * main.c
@@ -32,22 +33,24 @@ int main(void)
     i2c_init();
     LED_Init();
 
-    //    VCNL4200_Start_PS();
-        PWM_Initialize_Timers();
+        VCNL4200_Start_PS();
+        PWM_Initialize();
+        LED_Power_Toggle();
 
-        PWM_Set_Motor_3(20);
-int pwm = 0;
 while(1) {
+    __delay_cycles(80000);
 
-    __delay_cycles(60000);
-    PWM_Set_Motor_3(pwm);
-    pwm += 1;
-    if(pwm == 100) {
-        pwm = 0;
+
+    data = VCNL4200_Get_PS_Data();
+    pwm = data/250;
+
+    if(pwm > 100) {
+        pwm = 100;
+        LED_On(1);
+    } else if (pwm < 100) {
+        LED_Off(1);
     }
-
-    LED_Toggle(1);
-    LED_Toggle(2);
+    PWM_Set_All_Motors(pwm);
 
 }
 //    Task_Init();

@@ -4,7 +4,11 @@
  *  Created on: Apr 11, 2018
  *      Author: Tanner Smith
  */
+
 #include "commands.h"
+#include "comms.h"
+#include "led_driver.h"
+
 
 void COMMANDS_Process(char *message, uint8_t length){
     char *s = message;
@@ -13,7 +17,7 @@ void COMMANDS_Process(char *message, uint8_t length){
     char *s2 = "Set Ki ";
     char *s3 = "Set Kd ";
     char *s4 = "Set height ";
-    char *s5 = "Turn on graph ";
+    char *s5 = "LED Party";
 
     uint8_t s1_check = 0;
     uint8_t s2_check = 0;
@@ -28,7 +32,7 @@ void COMMANDS_Process(char *message, uint8_t length){
         s1_check++;
     }
     if(s1_check == 7){
-
+        COMMS_Send("Message Received");
     }
 
     // Check message 2
@@ -38,7 +42,7 @@ void COMMANDS_Process(char *message, uint8_t length){
         s2_check++;
     }
     if(s2_check == 7){
-
+        COMMS_Send("Message Received");
     }
 
     // Check message 3
@@ -48,7 +52,7 @@ void COMMANDS_Process(char *message, uint8_t length){
         s3_check++;
     }
     if(s3_check == 7){
-
+        COMMS_Send("Message Received");
     }
 
     // Check message 4
@@ -58,17 +62,17 @@ void COMMANDS_Process(char *message, uint8_t length){
         s4_check++;
     }
     if(s4_check == 11){
-
+        COMMS_Send("Message Received");
     }
 
-    // Check message 1
-    while(*s == *s1){
+    while((*s == *s5) && (*s5 != 0x00)){
         *s++;
-        *s1++;
-        s1_check++;
+        *s5++;
+        s5_check++;
     }
-    if(s1_check == 7){
+    if(s5_check == 9){
+        LED_Party();
+    }
 
-    }
 }
 

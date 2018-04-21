@@ -187,6 +187,11 @@ void i2c_UCB2_multiple_read(int slave_address, char memory_address, int size, ch
     UCB2CTL1 &= ~UCTR;                      // Enters RX Mode
     UCB2CTL1 |= UCTXSTT;                    // Sends start condition
     __bis_SR_register(LPM0_bits | GIE);     // Enters Low-Power mode and enables global interrupt
+
+    unsigned int j = 0;
+    for(j = 0; j < size; j++) {
+        rx_data[j] = rx_buffer[j];
+    }
 }
 
 
@@ -329,7 +334,14 @@ void i2c_UCB0_multiple_read(int slave_address, char memory_address, int size, ch
     UCB0CTL1 &= ~UCTR;                      // Enters RX Mode
     UCB0CTL1 |= UCTXSTT;                    // Sends start condition
     __bis_SR_register(LPM0_bits | GIE);     // Enters Low-Power mode and enables global interrupt
+
+    unsigned int j = 0;
+    for(j = 0; j < size; j++) {
+        rx_data[j] = rx_buffer[j];
+    }
 }
+
+
 
 /* Interrupt vector for UCB1 vector */
 #pragma vector = EUSCI_B0_VECTOR

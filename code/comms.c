@@ -11,11 +11,11 @@
 #include "terminal.h"
 
 #define BLUETOOTH_BAUD          115200
-#define BLUETOOTH_UART          UART1
+#define BLUETOOTH_UART          2
 #define STOP_CHAR               '\r'
 
-uint8_t string[128];
-int string_index = 0;
+char string[128];
+uint8_t string_index = 0;
 
 void COMMS_Init();
 void COMMS_Send(char *s);
@@ -30,14 +30,9 @@ void COMMS_Init(){
 
 void BluetoothReceiver(uint8_t c){
 
-    int successful_reception = 0;
-
     if(c == STOP_CHAR){
-        successful_reception = COMMAND_Process(string, string_index + 1);
+        COMMANDS_Process(string, string_index + 1);
         string_index = 0;
-        if(!successful_reception){
-            UART_printf(BLUETOOTH_UART, "Command Not Found");
-        }
     }
     else{
         string[string_index] = c;

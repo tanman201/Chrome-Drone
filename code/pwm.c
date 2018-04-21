@@ -33,11 +33,12 @@ void PWM_Initizlize_Timer_B(void) {
              + MC_1;        
     TB0CCTL2 = OUTMOD_7;    
     TB0CCTL3 = OUTMOD_7;    
-    TB0CCTL5 = OUTMOD_7;    
+    TB0CCTL5 = OUTMOD_7;  
+    TB0CCTL4 = OUTMOD_7;  
     TB0CCR0  = 100;         
 }
 
-void PWM_Initialize_Timers(void) {
+void PWM_Initialize(void) {
     PWM_Initialize_GPIO();
     PWM_Initizlize_Timer_A();
     PWM_Initizlize_Timer_B();
@@ -60,6 +61,6 @@ void PWM_Set_Motor_4(int pwm) {
 }
 
 void PWM_Set_All_Motors(int pwm) {
-	TA0CCR2 = TB0CCR2 = TB0CCR3 = TB0CCR5 = pwm;
+	TA0CCR2 = TB0CCR2 = TB0CCR3 = TB0CCR5 = TB0CCR4 = pwm;
 }
 
