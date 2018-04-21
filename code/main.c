@@ -32,16 +32,23 @@ int main(void)
     i2c_init();
     LED_Init();
 
-        VCNL4200_Start_PS();
+    //    VCNL4200_Start_PS();
+        PWM_Initialize_Timers();
 
+        PWM_Set_Motor_3(20);
+int pwm = 0;
 while(1) {
 
     __delay_cycles(60000);
-    VCNL4200_Get_PS_Data();
+    PWM_Set_Motor_3(pwm);
+    pwm += 1;
+    if(pwm == 100) {
+        pwm = 0;
+    }
+
     LED_Toggle(1);
     LED_Toggle(2);
-    LED_Toggle(3);
-    LED_Toggle(4);
+
 }
 //    Task_Init();
 // //   UART_Init(SUBSYSTEM_UART);

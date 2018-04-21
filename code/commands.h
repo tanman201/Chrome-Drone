@@ -8,6 +8,8 @@
 #ifndef COMMANDS_H_
 #define COMMANDS_H_
 
+#include "system.h"
+
 void COMMANDS_Process(char *message, uint8_t length);
 
 #endif /* COMMANDS_H_ */

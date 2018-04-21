@@ -14,12 +14,10 @@
 #include "system.h"
 
 void PWM_Initialize_Timers(void);
-void PWM_Initialize_Timer_A(void);
-void PWM_Initialize_Timer_B(void);
-void PWM_Set_Motor_1(char pwm);
-void PWM_Set_Motor_2(char pwm);
-void PWM_Set_Motor_3(char pwm);
-void PWM_Set_Motor_4(char pwm);
-void PWM_Set_All_Motors(char pwm);
+void PWM_Set_Motor_1(int pwm);
+void PWM_Set_Motor_2(int pwm);
+void PWM_Set_Motor_3(int pwm);
+void PWM_Set_Motor_4(int pwm);
+void PWM_Set_All_Motors(int pwm);
 
 #endif /* PWM_H_ */

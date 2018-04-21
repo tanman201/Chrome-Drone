@@ -20,7 +20,7 @@ int string_index = 0;
 void COMMS_Init();
 void COMMS_Send(char *s);
 void COMMS_SendXY(char *s, uint8_t x, uint8_t y);
-
+void BluetoothReceiver(uint8_t c);
 
 void COMMS_Init(){
     UART_Init(BLUETOOTH_UART);
@@ -46,7 +46,7 @@ void BluetoothReceiver(uint8_t c){
 }
 
 void COMMS_Send(char *s){
-    c = *s++;
+    char c = *s++;
     while(c){
         UART_WriteByte(BLUETOOTH_UART, c);
         c = *s++;
@@ -54,6 +54,6 @@ void COMMS_Send(char *s){
 }
 
 void COMMS_SendXY(char *s, uint8_t x, uint8_t y){
-    Terminal_CursorXY(BLUETOOTH_CHANNEL, x, y);
+    Terminal_CursorXY(BLUETOOTH_UART, x, y);
     COMMS_Send(s);
 }

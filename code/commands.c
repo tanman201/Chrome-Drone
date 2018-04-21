@@ -4,7 +4,7 @@
  *  Created on: Apr 11, 2018
  *      Author: Tanner Smith
  */
-
+#include "commands.h"
 
 void COMMANDS_Process(char *message, uint8_t length){
     char *s = message;
