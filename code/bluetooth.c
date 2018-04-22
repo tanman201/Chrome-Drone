@@ -20,7 +20,7 @@ void BLUETOOTH_Init(){
 
    // Initialize status pin as input and configure GPIO interrupt to toggle LED
    *status_port_dir &= ~status_location;
-//   *status_ren_reg |= status_location;
+   *status_ren_reg |= status_location;
    *status_port_out &= ~status_location;
 
    // Initialize module to be in auto-discovery mode
@@ -41,9 +41,9 @@ void BLUETOOTH_Init(){
    // Initialize baudrate to 115200
    *baud_port_dir |= baud_location;
    *baud_port_out &= ~baud_location;
-//
-//   Status_ClearFlag();
-//   Status_EnableInterrupt(0);
+
+   Status_ClearFlag();
+   Status_EnableInterrupt(0);
 }
 
 

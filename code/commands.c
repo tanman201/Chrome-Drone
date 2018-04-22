@@ -32,8 +32,13 @@ void COMMANDS_Process(char *message, uint8_t length){
         s1_check++;
     }
     if(s1_check == 7){
-        COMMS_Send("Message Received");
+        char value[3] = {*s++, *s++, *s++};
+        COMMS_Send("Kp set to ");
+        COMMS_Send(&value[0]);
+        COMMS_Send(&value[1]);
+        COMMS_Send(&value[2]);
     }
+    s = message;
 
     // Check message 2
     while((*s == *s2) && (*s2 != 0x00)){
@@ -44,6 +49,7 @@ void COMMANDS_Process(char *message, uint8_t length){
     if(s2_check == 7){
         COMMS_Send("Message Received");
     }
+    s = message;
 
     // Check message 3
     while((*s == *s3) && (*s3 != 0x00)){
@@ -54,6 +60,7 @@ void COMMANDS_Process(char *message, uint8_t length){
     if(s3_check == 7){
         COMMS_Send("Message Received");
     }
+    s = message;
 
     // Check message 4
     while((*s == *s4) && (*s4 != 0x00)){
@@ -64,6 +71,7 @@ void COMMANDS_Process(char *message, uint8_t length){
     if(s4_check == 11){
         COMMS_Send("Message Received");
     }
+    s = message;
 
     while((*s == *s5) && (*s5 != 0x00)){
         *s++;
@@ -73,6 +81,7 @@ void COMMANDS_Process(char *message, uint8_t length){
     if(s5_check == 9){
         LED_Party();
     }
+    s = message;
 
 }
 

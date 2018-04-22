@@ -18,14 +18,9 @@ const int reset_location =                              BIT6;
 // RN42 GPIO2 Input - Status (High when Bluetooth Connected) - Connected to P2.7
 // High when module is connected over Bluetooth
 // Low when module is not connected over Bluetooth
-volatile unsigned char * status_port_dir =              &P2DIR;
-volatile unsigned char * status_port_in =               &P2OUT;
-volatile unsigned char * status_port_out =              &P2OUT;
-volatile unsigned char * status_ren_reg =               &P2REN;
-volatile unsigned char * status_ie_reg =                &P2IE;
-volatile unsigned char * status_ies_reg =               &P2IES;
-volatile unsigned char * status_ifg_reg =               &P2IFG;
-const int status_location =                             BIT7;
+volatile unsigned char * connected_port_dir =              &P2DIR;
+volatile unsigned char * connected_port_in =               &P2OUT;
+const int connected_location =                             BIT7;
 
 // RN42 GPIO3 Output - Auto-discovery mode (Set high always) - Connected to P4.6
 // Set high to put the module in auto-discovery mode
@@ -45,9 +40,14 @@ const int factory_location =                            BIT4;
 // Toggles at 1 Hz when the module is discoverable and waiting for connection
 // Toggles at 10 Hz when the module is in command mode
 // Driven High when the modle is connected over Bluetooth
-volatile unsigned char * connected_port_dir =           &P4DIR;
-volatile unsigned char * connected_port_in =            &P4OUT;
-const int connected_location  =                         BIT5;
+volatile unsigned char * status_port_dir =           &P4DIR;
+volatile unsigned char * status_port_in =            &P4OUT;
+volatile unsigned char * status_port_out =              &P4OUT;
+volatile unsigned char * status_ren_reg =               &P4REN;
+volatile unsigned char * status_ie_reg =                &P4IE;
+volatile unsigned char * status_ies_reg =               &P4IES;
+volatile unsigned char * status_ifg_reg =               &P4IFG;
+const int status_location  =                         BIT5;
 
 // RN42 GPIO6 - Set Bluetooth as master - Connected to P1.0
 // Setting this pin high will force the module to connect to the address stored

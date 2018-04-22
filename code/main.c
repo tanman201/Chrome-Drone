@@ -33,31 +33,24 @@ int main(void)
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
     PM5CTL0 &= ~LOCKLPM5;                   // Disable the GPIO power-on default high-impedance mode
 
-
+    DisableInterrupts();
+    LED_Init();
+    LED_Power_On();
     Timing_Init();
     Task_Init();
-    LED_Init();
-   // COMMS_Init();
     BLUETOOTH_Init();
-    DisableInterrupts();
-    EnableInterrupts();
-
+    COMMS_Init();
+    PWM_Initialize();
     i2c_init();
 
-    VCNL4200_Start_PS();
-    PWM_Initialize();
-    PID_Set_Target_Height(5000);
-
-    PID_Set_Kd(1);
-    PID_Set_Kp(100);
-    LED_On(1);
+    EnableInterrupts();
+   VCNL4200_Start_PS();
 
 
    Task_Schedule(PID_Update, 0, 0, 50);
 
     while(1){
         SystemTick();
-        int time = TimeNow();
     }
 }
 
@@ -89,20 +82,20 @@ void Sensor_Connection_Test(void) {
     }
 }
 
-//#pragma vector=PORT2_VECTOR
-//__interrupt void Port_2(void) {
-//
-//    static int current_edge = 0;
-//    LED_Bluetooth_Toggle();
-//    Status_DisableInterrupt();
-//    Status_EnableInterrupt(current_edge);
-//
-//    if(current_edge){
-//        current_edge = 0;
-//    }
-//    else {
-//        current_edge = 1;
-//    }
-//
-//    Status_ClearFlag();
-//}
+#pragma vector=PORT4_VECTOR
+__interrupt void Port_4(void) {
+
+    static int current_edge = 0;
+    LED_Bluetooth_Toggle();
+    Status_DisableInterrupt();
+    Status_EnableInterrupt(current_edge);
+
+    if(current_edge){
+        current_edge = 0;
+    }
+    else {
+        current_edge = 1;
+    }
+
+    Status_ClearFlag();
+}

@@ -415,13 +415,3 @@ __interrupt void USCI_B2_ISR(void) {
             }
         break;
 }   }
-
-
-
-/* Timer interrupt vector */
-#pragma vector = TIMER1_A0_VECTOR
-__interrupt void Timer_A (void) {
-
-    timeout = 1;
-    __bic_SR_register_on_exit(LPM0_bits);
-}

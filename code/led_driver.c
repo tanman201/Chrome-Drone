@@ -7,6 +7,7 @@
 
 
 #include "system.h"
+#include "comms.h"
 
 void LED1_On();
 void LED1_Off();
@@ -47,14 +48,14 @@ void LEDC_Toggle();
 
 void LED_Init(){
     //Set LEDs as outputs
-    P1DIR |= 0x1C;
+    P1DIR |= 0x1E;
     P2DIR |= 0x60; //Blutooth P2.6 Power P2.5
     P3DIR |= 0x07;
     P4DIR |= 0x0C;
     P5DIR |= 0x0F;
 
     //Initialize LEDs as off
-    P1OUT &= ~0x1C;
+    P1OUT &= ~0x1E;
     P2OUT &= ~0x60;
     P3OUT &= ~0x07;
     P4OUT &= ~0x0C;
@@ -213,15 +214,21 @@ void LED_Power_Toggle(){
 
 void LED_All_On(){
      P1OUT |= 0x1E;
-     P3OUT |= 0x06;
+     P3OUT |= 0x07;
      P4OUT |= 0x0C;
      P5OUT |= 0x0F;
 }
 void LED_All_Off(){
     P1OUT &= ~0x1E;
-    P3OUT &= ~0x06;
+    P3OUT &= ~0x07;
     P4OUT &= ~0x0C;
     P5OUT &= ~0x0F;
+}
+void LED_All_Toggle(){
+     P1OUT ^= 0x1E;
+     P3OUT ^= 0x07;
+     P4OUT ^= 0x0C;
+     P5OUT ^= 0x0F;
 }
 //**********LED Functions*******//
 void LED1_On(){
@@ -356,26 +363,19 @@ void LEDC_Toggle(){
     P5OUT ^= BIT2; //LED14 on PCB
 }
 
-#define DELAY 250
+#define DELAY 100
 
 void LED_Party(){
-    LED_Bluetooth_Toggle();
-    DelayMs(DELAY);
+
     LED_Power_Toggle();
     DelayMs(DELAY);
 
-    LED_Bluetooth_Toggle();
-    DelayMs(DELAY);
     LED_Power_Toggle();
     DelayMs(DELAY);
 
-    LED_Bluetooth_Toggle();
-    DelayMs(DELAY);
     LED_Power_Toggle();
     DelayMs(DELAY);
 
-    LED_Bluetooth_Toggle();
-    DelayMs(DELAY);
     LED_Power_Toggle();
     DelayMs(DELAY);
 
@@ -403,4 +403,6 @@ void LED_Party(){
         LED_Toggle(i);
         DelayMs(DELAY);
     }
+
+    COMMS_Send("We are going to party till we're purple \r");
 }

@@ -5,6 +5,7 @@
  *      Author: Tanner Smith
  */
 
+#include "msp430.h"
 #include "comms.h"
 #include "commands.h"
 #include "uart.h"
@@ -12,7 +13,7 @@
 
 #define BLUETOOTH_BAUD          115200
 #define BLUETOOTH_UART          2
-#define STOP_CHAR               '\r'
+#define STOP_CHAR               0x0A
 
 char string[128];
 uint8_t string_index = 0;
@@ -22,20 +23,23 @@ void COMMS_Send(char *s);
 void COMMS_SendXY(char *s, uint8_t x, uint8_t y);
 void BluetoothReceiver(uint8_t c);
 
+
 void COMMS_Init(){
     UART_Init(BLUETOOTH_UART);
     UART_ReconfigureBaud(BLUETOOTH_UART, BLUETOOTH_BAUD);
+    UCA2MCTLW = 0xD600;
     UART_RegisterReceiver(BLUETOOTH_UART, BluetoothReceiver);
 }
 
 void BluetoothReceiver(uint8_t c){
 
     if(c == STOP_CHAR){
-        COMMANDS_Process(string, string_index + 1);
+        COMMANDS_Process(&string[0], string_index + 1);
         string_index = 0;
     }
     else{
         string[string_index] = c;
+        string_index++;
     }
 
 }

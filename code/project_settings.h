@@ -21,9 +21,9 @@
 
 #define SUBSYSTEM_UART 0
 
-#define UART0_TX_BUFFER_LENGTH 256
+#define UART2_TX_BUFFER_LENGTH 256
 
-#define USE_UART0
+#define USE_UART2
 
 #define TASK_MAX_LENGTH 20
 

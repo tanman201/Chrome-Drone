@@ -8,9 +8,7 @@
 #ifndef COMMANDS_H_
 #define COMMANDS_H_
 
-
 #include "stdint.h"
-
 
 void COMMANDS_Process(char *message, uint8_t length);
 

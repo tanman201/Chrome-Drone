@@ -22,6 +22,7 @@ void LED_Power_Off();
 void LED_Power_Toggle();
 void LED_All_On();
 void LED_All_Off();
+void LED_All_Toggle();
 void LED_Party();
 
 #endif /* LED_DRIVER_H_ */
