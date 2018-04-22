@@ -1,16 +1,14 @@
 #include <msp430.h> 
+#include "comms.h"
 #include "project_settings.h"
 #include "subsystem.h"
 #include "task.h"
 #include "uart.h"
 #include "hal_general.h"
 #include "system.h"
+#include "led_driver.h"
+#include "bluetooth.h"
 
-void Blink_Setup();
-void Blink();
-void Sensor_Connection_Test(void);
-
-/* Global variable declerations */
 int target_height = 0;
 int Kp = 0;
 int Ki = 0;
@@ -19,64 +17,49 @@ int past_error = 0;
 uint16_t data = 0;
 int pwm = 0;
 
+
+void Blink_Setup();
+void Blink();
+void Sensor_Connection_Test(void);
+
+
+
+
 /**
  * main.c
  */
 int main(void)
 {
-    PM5CTL0 &= ~LOCKLPM5;
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
+    PM5CTL0 &= ~LOCKLPM5;                   // Disable the GPIO power-on default high-impedance mode
 
+
+    Timing_Init();
+    Task_Init();
+    LED_Init();
+   // COMMS_Init();
+    BLUETOOTH_Init();
     DisableInterrupts();
     EnableInterrupts();
 
     i2c_init();
-    LED_Init();
 
-        VCNL4200_Start_PS();
-        PWM_Initialize();
-        LED_Power_Toggle();
+    VCNL4200_Start_PS();
+    PWM_Initialize();
+    PID_Set_Target_Height(5000);
 
-while(1) {
-    __delay_cycles(80000);
+    PID_Set_Kd(1);
+    PID_Set_Kp(100);
+    LED_On(1);
 
 
-    data = VCNL4200_Get_PS_Data();
-    pwm = data/250;
+   Task_Schedule(PID_Update, 0, 0, 50);
 
-    if(pwm > 100) {
-        pwm = 100;
-        LED_On(1);
-    } else if (pwm < 100) {
-        LED_Off(1);
+    while(1){
+        SystemTick();
+        int time = TimeNow();
     }
-    PWM_Set_All_Motors(pwm);
-
 }
-//    Task_Init();
-// //   UART_Init(SUBSYSTEM_UART);
-//
-//    Blink_Setup();
-//
-
-//
-//    Task_Schedule(Blink, 0, 0, 1000);
-//
-//    while(1) {
-//        SystemTick();
-//    }
-}
-
-void Blink_Setup(){
-    P1OUT &= ~BIT0;                         // Clear P1.0 output latch for a defined power-on state
-    P1DIR |= BIT0;                          // Set P1.0 to output direction
-}
-
-void Blink(){
-    P1OUT ^= BIT0;                      // Toggle LED
-}
-
-
 
 
 /*
@@ -105,3 +88,21 @@ void Sensor_Connection_Test(void) {
         }
     }
 }
+
+//#pragma vector=PORT2_VECTOR
+//__interrupt void Port_2(void) {
+//
+//    static int current_edge = 0;
+//    LED_Bluetooth_Toggle();
+//    Status_DisableInterrupt();
+//    Status_EnableInterrupt(current_edge);
+//
+//    if(current_edge){
+//        current_edge = 0;
+//    }
+//    else {
+//        current_edge = 1;
+//    }
+//
+//    Status_ClearFlag();
+//}

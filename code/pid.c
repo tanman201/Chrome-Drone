@@ -15,20 +15,24 @@ extern int Kp;
 extern int target_height;
 extern int past_error;
 
+uint32_t elapsed = 0;
 
-void PID_Set_Ki(char value) {
+
+void PID_Set_Ki(int value) {
 	Ki = value;
 }
 
-void PID_Set_Kp(char value) {
+void PID_Set_Kp(int value) {
 	Kp = value;
 }
 
-void PID_Set_Kd(char value) {
+void PID_Set_Kd(int value) {
 	Kd = value;
 }
 
 void PID_Update(void) {
+    uint32_t start = TimeNow();
+    LED_Toggle(2);
 	uint16_t current_height = VCNL4200_Get_PS_Data();
 
 	int current_error = current_height - target_height;
@@ -48,4 +52,11 @@ void PID_Update(void) {
 	} else if(pid_output > MAX_OUTPUT) {
 		pid_output = MAX_OUTPUT;
 	}
+
+	PWM_Set_All_Motors(pid_output);
+	elapsed = TimeSince(start);
+}
+
+void PID_Set_Target_Height(int value) {
+    target_height = value;
 }

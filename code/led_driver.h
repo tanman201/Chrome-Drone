@@ -14,13 +14,14 @@ void LED_Init();
 void LED_On(unsigned int LED);
 void LED_Off(unsigned int LED);
 void LED_Toggle(unsigned int LED);
-void LED_Blutooth_On();
-void LED_Blutooth_Off();
-void LED_Blutooth_Toggle();
+void LED_Bluetooth_On();
+void LED_Bluetooth_Off();
+void LED_Bluetooth_Toggle();
 void LED_Power_On();
 void LED_Power_Off();
 void LED_Power_Toggle();
 void LED_All_On();
 void LED_All_Off();
+void LED_Party();
 
 #endif /* LED_DRIVER_H_ */

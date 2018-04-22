@@ -21,12 +21,6 @@ void PWM_Initialize_GPIO(void) {
            |  BIT5;
 }
 
-void PWM_Initizlize_Timer_A(void) {
-    TA0CTL   = TASSEL_2  
-             + MC_2;
-    TA0CCTL2 = OUTMOD_7; 
-    TA0CCR0  = 100;     
-}
 
 void PWM_Initizlize_Timer_B(void) {
     TB0CTL   = TBSSEL_2     
@@ -40,7 +34,6 @@ void PWM_Initizlize_Timer_B(void) {
 
 void PWM_Initialize(void) {
     PWM_Initialize_GPIO();
-    PWM_Initizlize_Timer_A();
     PWM_Initizlize_Timer_B();
 }
 

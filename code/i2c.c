@@ -16,6 +16,7 @@ int i  = 0;             // Counting variable for the I2C interrupt
 int v  = 0;             // Counting variable for the I2c interrupt
 char    tx_buffer[6],     // Creates an array to store memory data
         rx_buffer[6];    // Data buffer which stores data to be sent
+int timeout = 0;
 
 
 /*
@@ -51,6 +52,7 @@ void i2c_init(void) {
     UCB0IE    |= UCTXIE         // Data received interrupt enable
               |  UCRXIE;        // Data ready to transmit interrupt enable
 }
+
 
 
 /*
@@ -118,10 +120,10 @@ void i2c_UCB2_multiple_write(char slave_address, char memory_address, int size, 
         tx_buffer[j + 1] = tx_data[j];     // Offset by 2 to avoid address overwrite
     }
 
-
     UCB2CTL1 |= UCTR                    // Enables TX Mode
              |  UCTXSTT;                // Sends start condition
     __bis_SR_register(LPM0_bits | GIE); // Enters Low-Power mode and enables global interrupt
+
 }
 
 
@@ -182,7 +184,7 @@ void i2c_UCB2_multiple_read(int slave_address, char memory_address, int size, ch
              |  UCTXSTT;                    // Sends start condition
      __bis_SR_register(LPM0_bits | GIE);    // Enters Low-Power mode and enables global interrupt
     UCB2TBCNT  = 0x03;                      // Sets 1 byte of data to be sent
-    __delay_cycles(8);                      // Delays cycles for unknown reason
+//    __delay_cycles(8);                      // Delays cycles for unknown reason
     UCB2TBCNT  = size;
     UCB2CTL1 &= ~UCTR;                      // Enters RX Mode
     UCB2CTL1 |= UCTXSTT;                    // Sends start condition
@@ -225,7 +227,6 @@ void i2c_UCB0_single_write(char slave_address, char memory_address, char *tx_dat
         tx_buffer[j + 1] = tx_data[j];     // Offset by 2 to avoid address overwrite
     }
 
-
     UCB0CTL1 |= UCTR                    // Enables TX Mode
              |  UCTXSTT;                // Sends start condition
     __bis_SR_register(LPM0_bits | GIE); // Enters Low-Power mode and enables global interrupt
@@ -262,10 +263,11 @@ void i2c_UCB0_multiple_write(char slave_address, char memory_address, int size, 
         tx_buffer[j + 1] = tx_data[j];     // Offset by 1 to avoid address overwrite
     }
 
-
     UCB0CTL1 |= UCTR                    // Enables TX Mode
              |  UCTXSTT;                // Sends start condition
+
     __bis_SR_register(LPM0_bits | GIE); // Enters Low-Power mode and enables global interrupt
+
 }
 
 
@@ -293,8 +295,8 @@ void i2c_UCB0_single_read(int slave_address, char memory_address, char *rx_data)
     UCB0CTL1 |= UCTR                        // Enables TX Mode
              |  UCTXSTT;                    // Sends start condition
      __bis_SR_register(LPM0_bits | GIE);    // Enters Low-Power mode and enables global interrupt
+
     UCB0TBCNT  = 0x01;                      // Sets 1 byte of data to be sent
-    __delay_cycles(8);                      // Delays cycles for unknown reason
 
     UCB0CTL1 &= ~UCTR;                      // Enters RX Mode
     UCB0CTL1 |= UCTXSTT;                    // Sends start condition
@@ -324,14 +326,15 @@ void i2c_UCB0_multiple_read(int slave_address, char memory_address, int size, ch
     TX_Byte_Ctr = 1;                        // Sets the amount of bytes to be sent
     i = 0;                                  // Counting variable set to zero
     tx_buffer[0] = memory_address;            // Loads LSB into sending buffer
-
     UCB0CTL1 |= UCTR                        // Enables TX Mode
              |  UCTXSTT;                    // Sends start condition
      __bis_SR_register(LPM0_bits | GIE);    // Enters Low-Power mode and enables global interrupt
+
     UCB0TBCNT  = 0x03;                      // Sets 1 byte of data to be sent
     __delay_cycles(8);                      // Delays cycles for unknown reason
     UCB0TBCNT  = size;
     UCB0CTL1 &= ~UCTR;                      // Enters RX Mode
+
     UCB0CTL1 |= UCTXSTT;                    // Sends start condition
     __bis_SR_register(LPM0_bits | GIE);     // Enters Low-Power mode and enables global interrupt
 
@@ -373,6 +376,9 @@ __interrupt void USCI_B0_ISR(void) {
                 i = 0;
                 __bic_SR_register_on_exit(LPM0_bits); // Exit LPM0
             }
+
+        case USCI_I2C_UCNACKIFG:            // Vector 4: NACKIFG
+                    UCB2CTL1 |= UCTXSTT;            // I2C start condition
         break;
 }   }
 
@@ -412,3 +418,10 @@ __interrupt void USCI_B2_ISR(void) {
 
 
 
+/* Timer interrupt vector */
+#pragma vector = TIMER1_A0_VECTOR
+__interrupt void Timer_A (void) {
+
+    timeout = 1;
+    __bic_SR_register_on_exit(LPM0_bits);
+}

@@ -17,9 +17,10 @@
 #define MAX_OUTPUT	100
 #define MIN_OUTPUT	  4
 
-void PID_Set_Ki(char value);
-void PID_Set_Kp(char value);
-void PID_Set_Kd(char value);
+void PID_Set_Ki(int value);
+void PID_Set_Kp(int value);
+void PID_Set_Kd(int value);
+void PID_Set_Target_Height(int value);
 void PID_Update(void);
 
 #endif /* SYSTEM_H_ */

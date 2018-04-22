@@ -11,7 +11,7 @@
 
 #include "debug.h"
 
-void debugMenuHandle(char c) {
+void debugMenuHandle(uint8_t c) {
     UART_UnregisterReceiver(UART_CHANNEL_DEBUG, debugMenuHandle);
     switch (c) {
         case '1':
@@ -47,7 +47,7 @@ void Debug_Options() {
 }
 
 
-void accelMenuHandle(char c) {
+void accelMenuHandle(uint8_t c) {
 	UART_Printf(UART_CHANNEL_DEBUG, "%c", c);
 	int x, y, z;
 	switch(c) {
@@ -84,7 +84,7 @@ void Accel_Tests() {
 	UART_Printf(UART_CHANNEL_DEBUG, accelMenu);
 }
 
-void proxMenuHandle(char c) {
+void proxMenuHandle(uint8_t c) {
 	UART_Printf(UART_CHANNEL_DEBUG, "%c", c);
 	switch(c) {
 		case '1':
@@ -120,7 +120,7 @@ void Prox_Tests() {
 	UART_Printf(UART_CHANNEL_DEBUG, proxMenu);
 }
 
-void motorMenuHandle(char c) {
+void motorMenuHandle(uint8_t c) {
 	UART_Printf(UART_CHANNEL_DEBUG, "%c", c);
 	switch(c) {
 		case '1':

@@ -13,11 +13,11 @@
 
 #include "system.h"
 
-void debugMenuHandle(char c);
+void debugMenuHandle(uint8_t c);
 void Debug_Options();
-void accelMenuHandle(char c);
+void accelMenuHandle(uint8_t c);
 void Accel_Tests();
-void proxMenuHandle(char c);
+void proxMenuHandle(uint8_t c);
 void Prox_Tests();
 
 
