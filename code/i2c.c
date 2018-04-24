@@ -29,6 +29,9 @@ void i2c_init(void) {
     /* UCB2 Initialization */
     P7SEL0    |= BIT0           // SDA line for I2C using UCB2
               |  BIT1;          // SCL line for I2C using UCB2
+    P7SEL1  &= ~BIT0;
+    P7SEL1 &= ~BIT1;
+    
     UCB2CTLW0 |= UCSWRST;       // Enters reset state, USCI stops operation
     UCB2CTLW1 |= UCASTP_2;      // Sends stop bit when UCTBCNT is reached
     UCB2CTLW0 |= UCMST          // Master Mode
@@ -345,6 +348,39 @@ void i2c_UCB0_multiple_read(int slave_address, char memory_address, int size, ch
 }
 
 
+/* Interrupt vector for UCB2 vector */
+#pragma vector = EUSCI_B2_VECTOR
+__interrupt void USCI_B2_ISR(void) {
+    switch(__even_in_range(UCB2IV, USCI_I2C_UCBIT9IFG)) {
+
+        case USCI_I2C_UCRXIFG0:                             // I2C RX Interrupt
+            if(RX_Byte_Ctr > 1){                            // Checks if there is more data to be received
+                rx_buffer[v] = UCB2RXBUF; // Loads the data array
+                v++;                                        // Increments the pointer
+                RX_Byte_Ctr--;                              // Decrement TX byte counter
+            } else if (RX_Byte_Ctr == 1){
+                rx_buffer[v] = UCB2RXBUF; // Loads the data array
+                v++;                                        // Increments the pointer
+                RX_Byte_Ctr--;
+                v=0;
+                __bic_SR_register_on_exit(LPM0_bits);       // Exit LPM0
+            }
+        break;
+
+        case USCI_I2C_UCTXIFG0:                       // I2C TX Interrupt
+            if(TX_Byte_Ctr > 1){
+                UCB2TXBUF = tx_buffer[i];               // Example send
+                i++;
+                TX_Byte_Ctr--;
+            } else if (TX_Byte_Ctr == 1){
+                UCB2TXBUF = tx_buffer[i];               // Example send
+                TX_Byte_Ctr--;
+                i = 0;
+                __bic_SR_register_on_exit(LPM0_bits); // Exit LPM0
+            }
+        break;
+}   }
+
 
 /* Interrupt vector for UCB1 vector */
 #pragma vector = EUSCI_B0_VECTOR
@@ -382,36 +418,3 @@ __interrupt void USCI_B0_ISR(void) {
         break;
 }   }
 
-
-/* Interrupt vector for UCB2 vector */
-#pragma vector = EUSCI_B2_VECTOR
-__interrupt void USCI_B2_ISR(void) {
-    switch(__even_in_range(UCB2IV, USCI_I2C_UCBIT9IFG)) {
-
-        case USCI_I2C_UCRXIFG0:                             // I2C RX Interrupt
-            if(RX_Byte_Ctr > 1){                            // Checks if there is more data to be received
-                rx_buffer[v] = UCB2RXBUF; // Loads the data array
-                v++;                                        // Increments the pointer
-                RX_Byte_Ctr--;                              // Decrement TX byte counter
-            } else if (RX_Byte_Ctr == 1){
-                rx_buffer[v] = UCB2RXBUF; // Loads the data array
-                v++;                                        // Increments the pointer
-                RX_Byte_Ctr--;
-                v=0;
-                __bic_SR_register_on_exit(LPM0_bits);       // Exit LPM0
-            }
-        break;
-
-        case USCI_I2C_UCTXIFG0:                       // I2C TX Interrupt
-            if(TX_Byte_Ctr > 1){
-                UCB2TXBUF = tx_buffer[i];               // Example send
-                i++;
-                TX_Byte_Ctr--;
-            } else if (TX_Byte_Ctr == 1){
-                UCB2TXBUF = tx_buffer[i];               // Example send
-                TX_Byte_Ctr--;
-                i = 0;
-                __bic_SR_register_on_exit(LPM0_bits); // Exit LPM0
-            }
-        break;
-}   }

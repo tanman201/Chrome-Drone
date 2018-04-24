@@ -34,6 +34,7 @@ int main(void)
     PM5CTL0 &= ~LOCKLPM5;                   // Disable the GPIO power-on default high-impedance mode
 
     DisableInterrupts();
+
     LED_Init();
     LED_Power_On();
     Timing_Init();
@@ -44,10 +45,12 @@ int main(void)
     i2c_init();
 
     EnableInterrupts();
-   VCNL4200_Start_PS();
+
+    VCNL4200_Start_PS();
+    LED_Party();
 
 
-   Task_Schedule(PID_Update, 0, 0, 50);
+//   Task_Schedule(PID_Update, 0, 0, 400);
 
     while(1){
         SystemTick();

@@ -13,7 +13,7 @@
 void COMMANDS_Process(char *message, uint8_t length){
     char *s = message;
 
-    char *s1 = "Set Kp ";
+    char *s1 = "Set motor ";
     char *s2 = "Set Ki ";
     char *s3 = "Set Kd ";
     char *s4 = "Set height ";
@@ -31,12 +31,12 @@ void COMMANDS_Process(char *message, uint8_t length){
         *s1++;
         s1_check++;
     }
-    if(s1_check == 7){
-        char value[3] = {*s++, *s++, *s++};
+    if(s1_check == 10){
+        char value[2] = {*s++, *s++};
         COMMS_Send("Kp set to ");
         COMMS_Send(&value[0]);
         COMMS_Send(&value[1]);
-        COMMS_Send(&value[2]);
+        PWM_Set_All_Motors(((uint8_t)value[0]-0x30)*10);
     }
     s = message;
 
